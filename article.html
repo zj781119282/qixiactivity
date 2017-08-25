@@ -490,7 +490,9 @@
             location.href = './index.html?referer=' + encodeURI(location.href);
         }
         window.onload = function(){
-            location.reload();
+            setTimeout(function(){
+                location.reload();
+            },1000);
         }
     </script>
 </body>
