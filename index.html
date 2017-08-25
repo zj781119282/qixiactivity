@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>姻缘早知早安心（专业商业AR创意DarCreator）</title>
+	<style>
+		html, body, div, h2, p, input {
+		  margin: 0;
+		  padding: 0;
+		}
+
+	 	html, body {
+	 		height: 100%;
+	 		width: 100%;
+	 		font-family: "微软雅黑";
+	 		color: #323032;
+	 	}
+		body {
+			font-size: .14rem;
+			background: url(./assets/image/index-bg.png) no-repeat;
+			background-size: cover;
+		}
+		#content {
+			flex: 1;
+			box-sizing: border-box;
+			display: flex;
+			justify-content: center;
+			overflow: auto;
+		}
+		h2 {
+			margin: 2.61rem 0 .21rem 0;
+			font-size: .18rem;
+		}
+		input {
+			border-radius: .05rem;
+			border: 1px solid #ff7391;
+			height: .415rem;
+			width: 1.81rem;
+			font-size: .14rem;
+			padding-left: .1rem;
+			box-sizing: border-box;
+		}
+		.role-name {
+			margin-top: .21rem;
+		}
+
+		.female {
+			margin-top: .19rem;
+			margin-bottom: .84rem;
+		}
+		.ok-btn {
+			background-color: #ff6666;
+			line-height: .41rem;
+			font-size: .18rem;
+			text-align: center;
+			color: #fff;
+			text-decoration: none;
+			display: inline-block;
+			font-weight: bold;
+			width: 1.74rem;
+			border-radius: .05rem;
+			margin-left: .32rem;
+		}
+		.test-tip {
+			font-size: .08rem;
+			text-align: center;
+			margin-top: .1rem;
+		}
+		#footer {
+			width: 100%;
+		}
+		.dar-support {
+			width: 100%;
+			font-size: .09rem;
+			margin-top: .5rem;
+			margin-bottom: .18rem;
+			text-align: center;
+		}
+
+		.alert_tip{
+	        display:none;
+	        padding:.1rem .2rem;
+	        position: absolute;
+	        background: #000;
+	        color:#fff;
+	        border-radius: .1rem;
+	        z-index: 9999;
+	    }
+	</style>
+</head>
+<body>
+	<div id="content">
+		<div class="role-name">
+			<h2>输入名字测试姻缘：</h2>
+			<div class="male">
+				<span>男主角：<input class="maleName" type="text"></span>
+			</div>
+			<div class="female">
+				<span>女主角：<input class="femaleName" type="text"></span>
+			</div>
+			<a href="javascript:;" class="ok-btn" onclick="decideGenerate()">确定生成</a>
+			<p class="test-tip">测试结果，纯属娱乐</p>
+		</div>
+	</div>
+	<div id="footer">
+		<p class="dar-support">DarCreator(商业AR创意)技术支持</p>
+	</div>
+    <script type="text/javascript" src="./libs/config.js"></script>
+	<script src='./libs/jquery-3.2.1.min.js'></script>
+	<script src='./libs/customAlert.js'></script>
+	<script>
+		/* 设置自适应页面 */
+		function calSize() {
+			var clientWidth = window.innerWidth || document.documentElement.ClientWidth;
+			document.documentElement.style.fontSize = clientWidth / 3.75 + 'px';
+		}
+		calSize();
+		// 监听设备变化
+		window.addEventListener('resize', calSize);
+
+		// 获取当前 url 和查询字符串
+		var urlStr = window.location.href;
+		var searchStr = window.location.search;
+
+		if (searchStr) {
+			if (searchStr.indexOf('referer') !== -1) {
+				var newUrl = searchStr.substring(searchStr.indexOf('referer=') + 8);
+				history.replaceState({}, '', newUrl);
+			}
+		}
+
+		/**
+		 * 验证字符串长度
+		 * @param  {[string]} str       [待验证字符串]
+		 * @param  {[int]}    maxLength [最大长度]
+		 * @return {[boolean]}          [满足true]
+		 */
+		function getStrLength(str, maxLength) {
+			var strLength = 0;
+			var strValue = str.trim();
+			for (var i = 0; i < strValue.length; i += 1) {
+				if(isCN(strValue.charAt(i)) === true) {
+					strLength += 2;
+				} else {
+					strLength += 1;
+				}
+			}
+
+			return strLength > maxLength ? false : true;
+		}
+		/* 判断是否为中文 */
+		function isCN(str) {
+			var regexCN = /[u00-uff]/;
+			return !regexCN.test(str);
+		}
+
+		/* 确定生成 */
+		function decideGenerate() {
+			var manName = $('.maleName')[0].value.trim();
+			var womenName = $('.femaleName')[0].value.trim();
+
+			if (!manName || !womenName) {
+				customAlert('男女主角名字不能为空！');
+				return;
+			}
+			if (!getStrLength(manName, 10)) {
+				customAlert('男主角名字超出长度限制！');
+				return;
+			}
+			if (!getStrLength(womenName, 10)) {
+				customAlert('女主角名字超出长度限制！');
+				return;
+			}
+
+			$.ajax({
+			    url: config.createUrl,
+			    method: 'POST',
+			    data: { manName, womenName },
+			    dataType: 'json'
+			}).done(function(res) {
+				if(res.code == 200) {
+					window.location.href = res.data;
+				}
+			}).fail(function() {
+				customAlert('生成文章失败！');
+			});
+		}
+	</script>
+</body>
+</html>
