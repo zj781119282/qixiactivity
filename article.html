@@ -388,6 +388,7 @@
                     $('.withoutUid').show();
                 }
             }
+            location.reload();
         }
 
         // 初始化canvas并操作后导出图片
@@ -488,11 +489,6 @@
 
         function toCreate() {
             location.href = './index.html?referer=' + encodeURI(location.href);
-        }
-        window.onload = function(){
-            setTimeout(function(){
-                location.reload();
-            },1000);
         }
     </script>
 </body>
